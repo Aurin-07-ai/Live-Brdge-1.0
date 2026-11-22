@@ -44,8 +44,9 @@ Set-Location C:\Users\S.DUTTA\LiveBridge-1.0
 4. Render will prompt for two values declared with `sync: false`:
    - `GEMINI_API_KEY` → paste the key from your local `backend/.env`.
    - `FRONTEND_ORIGIN` → put `http://localhost:3000` for now; replace it with the Vercel URL in step 3.
-5. Wait for the first build to finish (the Blueprint already installs Tesseract + Python deps,
-   starts gunicorn with a 180 s timeout, and sets `/api/health` as the health check).
+5. Wait for the first build to finish (the Blueprint builds `backend/Dockerfile`, which installs
+   Tesseract + Python deps and starts gunicorn with a 180 s timeout, and it sets `/api/health`
+   as the health check).
 6. Copy the service URL, e.g. `https://livebridge-backend.onrender.com`.
 
 ### Option B — Manual web service
@@ -54,10 +55,10 @@ Set-Location C:\Users\S.DUTTA\LiveBridge-1.0
 
 | Field | Value |
 | --- | --- |
-| Language / Runtime | Python 3 |
-| Root Directory | `backend` (Settings → Build & Deploy → Root Directory) |
-| Build Command | `apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-hin && pip install -r requirements.txt` |
-| Start Command | `gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 180 --graceful-timeout 180 app:app` |
+| Language / Runtime | Docker |
+| Dockerfile Path | `backend/Dockerfile` |
+| Build Context | repository root (leave default) |
+| Docker Command | leave blank (uses the Dockerfile `CMD`) |
 | Health Check Path | `/api/health` |
 | Plan | Free (adequate for a demo) |
 
@@ -69,7 +70,6 @@ Environment variables (Environment tab):
 | `GEMINI_MODEL` | `gemini-2.5-flash` |
 | `FRONTEND_ORIGIN` | `http://localhost:3000` (update later) |
 | `WEB_CONCURRENCY` | `1` |
-| `PYTHON_VERSION` | `3.12.10` |
 
 ### Verify the backend
 
@@ -79,8 +79,8 @@ Open `https://<service>.onrender.com/api/health` — you should see:
 {"service":"LiveBridge AI backend","status":"ok"}
 ```
 
-If the build fails on `apt-get` with a permission error, change the two `apt-get` calls in the
-build command to `sudo apt-get ...` (or use a Docker runtime on Render).
+If a native Python build fails on `apt-get` with a permission error, use the Docker runtime above;
+the Dockerfile installs system packages in a writable image layer.
 
 ---
 
@@ -139,9 +139,9 @@ Render service.
 - **SQLite is on an ephemeral filesystem.** `database/healthbridge.db` and
   `generated/*.pdf` disappear on redeploy/restart. For a demo that is fine. For persistence,
   attach a Render persistent disk, mount it at `/data`, and set `DATABASE_PATH=/data/healthbridge.db`.
-- **Tesseract is a system binary.** It is installed in the Render build command, including the
-  Hindi traineddata (`tesseract-ocr-hin`) used by `ocr.py`. Locally on Windows, set
-  `TESSERACT_CMD` in `backend/.env`.
+- **Tesseract is a system binary.** It is installed in `backend/Dockerfile`, including the Hindi
+  traineddata (`tesseract-ocr-hin`) used by `ocr.py`. Locally on Windows, set `TESSERACT_CMD`
+  in `backend/.env`.
 - **Upload limit** is 12 MB (`MAX_CONTENT_LENGTH` in `app.py`).
 - **Not a medical product.** Add authentication, encryption, retention controls and consent
   before exposing this to real patient records. Do not upload real documents to a demo deploy.
@@ -155,8 +155,8 @@ Render service.
 | `405`/CORS error in browser | `FRONTEND_ORIGIN` must exactly match the Vercel origin; save and wait for redeploy. |
 | Frontend shows demo data instead of results | Set `VITE_API_MODE=live` in Vercel and redeploy. |
 | `Failed to fetch` / 502 | Backend asleep or crashed — check Render Logs; hit `/api/health`. |
-| `ModuleNotFoundError` on Render | Root Directory must be `backend`; requirements must include `gunicorn`. |
-| `TesseractNotFoundError` | Build command must install `tesseract-ocr tesseract-ocr-eng tesseract-ocr-hin`. |
-| Worker timeout / 502 during upload | Keep `--timeout 180` in the gunicorn start command. |
+| `ModuleNotFoundError` on Render | Dockerfile must copy `backend/` and install `requirements.txt` (which includes `gunicorn`). |
+| `TesseractNotFoundError` | Dockerfile must install `tesseract-ocr tesseract-ocr-eng tesseract-ocr-hin`. |
+| Worker timeout / 502 during upload | Keep `--timeout 180` in the Dockerfile's gunicorn `CMD`. |
 | Vercel `/upload` gives 404 | `frontend/vercel.json` must be committed and Root Directory set to `frontend`. |
 | API key errors on `/api/care-plan` | Set `GEMINI_API_KEY` in Render Environment (not in Git) and redeploy. |

@@ -4,17 +4,13 @@
 services:
   - type: web
     name: livebridge-backend
-    runtime: python
-    rootDir: backend
+    runtime: docker
     plan: free
     healthCheckPath: /api/health
-    # Tesseract is a system binary, so it must be installed before pip.
-    buildCommand: apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-hin && pip install -r requirements.txt
-    # --timeout 180 matters: OCR + Gemini can take longer than gunicorn's 30s default.
-    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 1 --timeout 180 --graceful-timeout 180 app:app
+    # Dockerfile installs Tesseract + Python dependencies and runs gunicorn
+    # with a 180s timeout (OCR + Gemini can exceed the 30s default).
+    dockerfilePath: ./backend/Dockerfile
     envVars:
-      - key: PYTHON_VERSION
-        value: 3.12.10
       - key: GEMINI_API_KEY
         sync: false
       - key: GEMINI_MODEL
