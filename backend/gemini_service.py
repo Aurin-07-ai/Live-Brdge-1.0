@@ -42,7 +42,7 @@ DOCUMENT TEXT:
 {source_text[:18000]}
 """
     response = _client().models.generate_content(
-        model=os.getenv("GEMINI_MODEL", "gemini-3.8-flash"),
+        model=os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite"),
         contents=prompt,
         config=types.GenerateContentConfig(temperature=0.1, response_mime_type="application/json")
     )
@@ -68,7 +68,7 @@ PATIENT'S OWN EXPLANATION:
 {patient_response[:5000]}
 """
     response = _client().models.generate_content(
-        model=os.getenv("GEMINI_MODEL", "gemini-3.8-flash"),
+        model=os.getenv("GEMINI_MODEL", "gemini-3.1-flash-lite"),
         contents=prompt,
         config=types.GenerateContentConfig(temperature=0.1, response_mime_type="application/json")
     )

@@ -97,7 +97,7 @@ To build for deployment: `npm run build` (output: `frontend/dist`).
 | File | Variable | Purpose |
 | --- | --- | --- |
 | `backend/.env` | `GEMINI_API_KEY` | Google Gemini API key (required) |
-| `backend/.env` | `GEMINI_MODEL` | Defaults to `gemini-3.8-flash` |
+| `backend/.env` | `GEMINI_MODEL` | Defaults to `gemini-3.1-flash-lite` |
 | `backend/.env` | `FRONTEND_ORIGIN` | Comma-separated CORS origins, default `http://localhost:3000` |
 | `backend/.env` | `TESSERACT_CMD` | Optional path to Tesseract on Windows |
 | `backend/.env` | `DATABASE_PATH` | Optional SQLite path override |
