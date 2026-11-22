@@ -19,5 +19,6 @@ RUN mkdir -p uploads database generated
 
 EXPOSE 10000
 
-# Render provides PORT (10000 by default); keep the long timeout for OCR + Gemini.
-CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-10000} --workers 1 --timeout 180 --graceful-timeout 180 app:app"]
+# Render provides PORT (10000 by default). gthread keeps /api/health responsive
+# while a worker is busy with OCR + Gemini, so Render does not kill the instance.
+CMD ["sh", "-c", "gunicorn --bind 0.0.0.0:${PORT:-10000} --worker-class gthread --workers 1 --threads 4 --timeout 180 --graceful-timeout 180 app:app"]
