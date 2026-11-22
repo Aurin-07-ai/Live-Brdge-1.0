@@ -9,6 +9,9 @@ patient's own explanation with the document before producing a doctor clarificat
 > never be used to change medication instructions without clinician confirmation. Do not upload
 > real patient records to an unapproved external AI service.
 
+> **Going live?** See [DEPLOYMENT.md](DEPLOYMENT.md) for the Vercel (frontend) + Render (backend)
+> step-by-step guide.
+
 ---
 
 ## Repository layout
