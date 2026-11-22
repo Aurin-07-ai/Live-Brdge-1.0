@@ -8,7 +8,10 @@ You will end up with:
 | Piece | Platform | URL shape |
 | --- | --- | --- |
 | React app | Vercel | `https://<project>.vercel.app` |
-| Flask API | Render | `https://<service>.onrender.com` |
+| Flask API | Render | `https://livebridge-backend.onrender.com` |
+
+Current deployment: Vercel project `livebridge` in team `Nocturnal Innov8ors`; Render service
+`livebridge-backend`. Both deploy automatically from `main`.
 
 > ⚠️ Before pushing: `backend/.env` contains a real-looking Gemini API key. It is git-ignored,
 > so it will not be pushed, but set the key in Render's dashboard and rotate the old one in
