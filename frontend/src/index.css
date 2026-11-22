@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-main: #FAF8F5;
+    --surface-card: #FFFFFF;
+    --brand-primary: #0F6E73;
+    --calm-secondary: #E3F1EC;
+    --text-body: #1E293B;
+    --text-muted: #5A6577;
+    --alert-mismatch: #C85A32;
+    --warning-missing: #D9822B;
+  }
+
+  html {
+    background-color: #FAF8F5;
+    color: #1E293B;
+    scroll-behavior: smooth;
+    font-size: 18px; /* Accessible base for elderly eyes */
+  }
+
+  body {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #FAF8F5;
+    color: #1E293B;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* High contrast readable links and buttons */
+  button, a {
+    touch-action: manipulation;
+  }
+}
+
+/* Accessibility text scaling */
+html[data-text-size="normal"] {
+  font-size: 18px;
+}
+
+html[data-text-size="large"] {
+  font-size: 21px;
+}
+
+html[data-text-size="xlarge"] {
+  font-size: 24px;
+}
+
+/* Simplified mode overrides */
+.simplified-mode .clutter-element {
+  display: none !important;
+}
+
+.simplified-mode .action-card {
+  padding: 1.75rem !important;
+  font-size: 1.15rem !important;
+}
+
+/* Active audio playback highlight on cards */
+.audio-highlight-active {
+  background-color: #E3F1EC !important;
+  border-color: #0F6E73 !important;
+  box-shadow: 0 0 0 3px rgba(15, 110, 115, 0.25) !important;
+  transition: all 0.3s ease;
+}
+
+/* Print stylesheet for Doctor Clarification Slip */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  body, html {
+    background: #FFFFFF !important;
+    color: #1E293B !important;
+    font-size: 14pt !important;
+  }
+  .print-slip-container {
+    box-shadow: none !important;
+    border: 2px solid #0F6E73 !important;
+    border-radius: 8px !important;
+    margin: 0 !important;
+    padding: 24px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+.print-only {
+  display: none;
+}
