@@ -10,8 +10,21 @@ You will end up with:
 | React app | Vercel | `https://<project>.vercel.app` |
 | Flask API | Render | `https://livebridge-backend.onrender.com` |
 
-Current deployment: Vercel project `livebridge` in team `Nocturnal Innov8ors`; Render service
-`livebridge-backend`. Both deploy automatically from `main`.
+## Current live deployment
+
+| Piece | URL |
+| --- | --- |
+| Public frontend (share this) | **https://livebridge-five.vercel.app** |
+| Backend / health check | **https://livebridge-backend.onrender.com/api/health** |
+
+Vercel project `livebridge` in team `Nocturnal Innov8ors`; Render service `livebridge-backend`.
+Both deploy automatically from `main`.
+
+> Note: the team-scoped Vercel URLs such as
+> `https://livebridge-nocturnal-innov8ors.vercel.app` and
+> `https://livebridge-eeoi9s4u7-nocturnal-innov8ors.vercel.app` show a Vercel login page to
+> visitors who are not signed in to that team. Always use the public alias above. They are still
+> included in Render's `FRONTEND_ORIGIN` so signed-in previews work.
 
 > ⚠️ Before pushing: `backend/.env` contains a real-looking Gemini API key. It is git-ignored,
 > so it will not be pushed, but set the key in Render's dashboard and rotate the old one in
@@ -122,8 +135,8 @@ Render only accepts browser requests from origins listed in `FRONTEND_ORIGIN`.
    https://<project>.vercel.app
    ```
 
-   Multiple origins are comma-separated, e.g.
-   `https://<project>.vercel.app,https://livebridge-xyz.vercel.app,https://care.example.com`.
+   Multiple origins are comma-separated. This deployment uses:
+   `https://livebridge-nocturnal-innov8ors.vercel.app,https://livebridge-five.vercel.app,https://livebridge-eeoi9s4u7-nocturnal-innov8ors.vercel.app`.
 3. Save. Render redeploys automatically; wait until it is **Live**.
 4. Open the Vercel URL, upload a sample discharge summary, and check:
    - Browser DevTools → Network: `POST https://<service>.onrender.com/api/care-plan` → **200**.

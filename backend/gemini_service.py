@@ -1,8 +1,11 @@
 import os, json, re
+from functools import lru_cache
 from google import genai
 from google.genai import types
 
+@lru_cache(maxsize=1)
 def _client():
+    """Keep one long-lived client: a temporary client gets closed while a request is in flight."""
     key = os.getenv("GEMINI_API_KEY")
     if not key:
         raise EnvironmentError("GEMINI_API_KEY is missing. Add it to your .env file.")
