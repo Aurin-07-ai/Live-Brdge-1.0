@@ -17,5 +17,7 @@ services:
         value: gemini-3.1-flash-lite
       - key: FRONTEND_ORIGIN
         sync: false
+      - key: DATABASE_URL
+        sync: false
       - key: WEB_CONCURRENCY
         value: 1

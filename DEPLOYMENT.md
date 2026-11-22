@@ -85,6 +85,7 @@ Environment variables (Environment tab):
 | `GEMINI_API_KEY` | your real key |
 | `GEMINI_MODEL` | `gemini-3.1-flash-lite` |
 | `FRONTEND_ORIGIN` | `http://localhost:3000` (update later) |
+| `DATABASE_URL` | Neon PostgreSQL pooled connection string (secret) |
 | `WEB_CONCURRENCY` | `1` |
 
 ### Verify the backend
@@ -152,9 +153,11 @@ Render service.
 
 - **Free Render services sleep after inactivity.** The first request after a quiet period can
   take ~50 s. The frontend allows 120 s for generation, so it works, but users should know.
-- **SQLite is on an ephemeral filesystem.** `database/healthbridge.db` and
-  `generated/*.pdf` disappear on redeploy/restart. For a demo that is fine. For persistence,
-  attach a Render persistent disk, mount it at `/data`, and set `DATABASE_PATH=/data/healthbridge.db`.
+- **Session data persists in Neon PostgreSQL.** Set `DATABASE_URL` to the pooled Neon connection
+  string; `database.py` then creates/uses the `sessions` table there. Without it, the app falls back
+  to the local SQLite file, which is ephemeral on Render.
+- **Generated PDFs are still on an ephemeral filesystem.** `generated/*.pdf` disappears on
+  redeploy/restart. Attach a Render persistent disk if you need those files to survive.
 - **Tesseract is a system binary.** It is installed in `backend/Dockerfile`, including the Hindi
   traineddata (`tesseract-ocr-hin`) used by `ocr.py`. Locally on Windows, set `TESSERACT_CMD`
   in `backend/.env`.

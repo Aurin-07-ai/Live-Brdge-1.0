@@ -42,7 +42,7 @@ LiveBridge-1.0/
 │           └── speechService.js
 └── backend/                   # Python Flask
     ├── app.py                 # API routes
-    ├── database.py            # SQLite sessions -> database/healthbridge.db
+    ├── database.py            # sessions: Neon PostgreSQL (or SQLite fallback)
     ├── ocr.py                 # PDF text + Tesseract OCR
     ├── gemini_service.py      # care-plan generation + verification prompts
     ├── verification.py
@@ -50,13 +50,13 @@ LiveBridge-1.0/
     ├── pdf_slip.py            # ReportLab doctor slip
     ├── requirements.txt
     ├── .env.example
-    ├── database/healthbridge.db   # created on first run (git-ignored)
+    ├── database/healthbridge.db   # local SQLite fallback (git-ignored)
     ├── uploads/                   # temporary uploads (git-ignored)
     └── generated/                 # generated PDFs (git-ignored)
 ```
 
-`.env`, the SQLite database, uploaded files, generated PDFs and `__pycache__` are intentionally
-**not** tracked by Git.
+`.env`, the local SQLite fallback database, uploaded files, generated PDFs and `__pycache__` are
+intentionally **not** tracked by Git. Production sessions are stored in Neon PostgreSQL.
 
 ---
 
@@ -105,7 +105,8 @@ To build for deployment: `npm run build` (output: `frontend/dist`).
 | `backend/.env` | `GEMINI_MODEL` | Defaults to `gemini-3.1-flash-lite` |
 | `backend/.env` | `FRONTEND_ORIGIN` | Comma-separated CORS origins, default `http://localhost:3000` |
 | `backend/.env` | `TESSERACT_CMD` | Optional path to Tesseract on Windows |
-| `backend/.env` | `DATABASE_PATH` | Optional SQLite path override |
+| `backend/.env` | `DATABASE_URL` | Neon PostgreSQL connection string; when set, replaces the SQLite fallback |
+| `backend/.env` | `DATABASE_PATH` | Optional SQLite path override (used only when `DATABASE_URL` is unset) |
 | `backend/.env` | `PORT`, `FLASK_DEBUG` | Optional server settings |
 | `frontend/.env` | `VITE_API_URL` | Backend base URL, default `http://localhost:5000` |
 | `frontend/.env` | `VITE_API_MODE` | `auto` / `live` / `demo` |
@@ -164,6 +165,7 @@ git check-ignore -v backend\.env backend\database\healthbridge.db frontend\.env
 
 ## Notes
 
-- `backend/database/healthbridge.db` is created automatically by `init_db()` on first run.
+- With `DATABASE_URL` set, `init_db()` creates the `sessions` table in Neon PostgreSQL. Without it,
+  `backend/database/healthbridge.db` is created locally by `init_db()` on first run.
 - Uploaded documents are removed after processing; generated PDFs stay in `backend/generated/`.
 - Add authentication, encryption, retention controls and consent before any real deployment.
