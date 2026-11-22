@@ -1,5 +1,10 @@
 # LiveBridge AI — 1.0
 
+**Live app:** [https://livebridge-five.vercel.app](https://livebridge-five.vercel.app)
+
+**Backend API:** [https://livebridge-backend.onrender.com](https://livebridge-backend.onrender.com)
+(health check: `/api/health`)
+
 Patient-understanding and doctor-communication assistant. A patient (or caregiver) uploads a
 hospital discharge summary, the Flask backend extracts it with OCR and Gemini, the React app
 turns it into an accessible multilingual care plan, and the "Samjhao Wapas" check compares the
