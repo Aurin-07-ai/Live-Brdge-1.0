@@ -83,7 +83,7 @@ Environment variables (Environment tab):
 | Key | Value |
 | --- | --- |
 | `GEMINI_API_KEY` | your real key |
-| `GEMINI_MODEL` | `gemini-2.5-flash` |
+| `GEMINI_MODEL` | `gemini-3.8-flash` |
 | `FRONTEND_ORIGIN` | `http://localhost:3000` (update later) |
 | `WEB_CONCURRENCY` | `1` |
 
